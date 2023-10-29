@@ -2,6 +2,7 @@ import re
 import random
 import traceback
 from fileIO import getJSONFileContent, addToJSONFile, findOrCreateFile
+import constants
 
 SAVED_ROLL_MACRO_FILENAME = "baseRollMacros.json"
 
@@ -145,7 +146,7 @@ def replaceWithSavedMacros(input: str, savedMacros: dict, maxDepth: int) -> str:
     return inputBuffer
 
 def getSavedMacros(filePrefix: str) -> dict:
-    fileName = f"/data/userData/{filePrefix}Macros.json"
+    fileName = f"{constants.USER_DATA_PATH}/{filePrefix}Macros.json"
     findOrCreateFile(fileName)
     content = getJSONFileContent(SAVED_ROLL_MACRO_FILENAME)
     serverContent = getJSONFileContent(fileName)

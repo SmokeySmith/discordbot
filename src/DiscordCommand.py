@@ -10,6 +10,7 @@ from fileIO import getJSONFileContent, findOrCreateFile
 from PokemonSession import PokemonSession
 import DatabaseInteraction
 from PokemonType import Pokemon
+import constants
 
 SESSION = PokemonSession()
 
@@ -31,7 +32,7 @@ def getWhiteListServers() -> list[str]:
 #TODO make it so only the server admin can ask for this file to be created
 async def autoCompleteRollMacros(ctx: discord.AutocompleteContext) -> list:
     filePrefix = getServerFilePrefix(ctx.interaction)
-    fileName = f"/data/userData/{filePrefix}Macros.json"
+    fileName = f"{constants.USER_DATA_PATH}/{filePrefix}Macros.json"
 
     try:
         findOrCreateFile(fileName)  

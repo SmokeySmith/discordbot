@@ -2,17 +2,19 @@ import random
 from diceRoller import interpDice 
 import traceback
 from fileIO import getTextFileContent, appendToTextFile, findOrCreateFile
+import constants
 
 BASE_INSULTS_FILE = "baseInsults.txt"
 SERVER_FILE_PARTIAL = "_insults.txt"
 
 def getUserFileName(filePrefix: str) -> str: 
-    return f"/data/userData/{filePrefix}{SERVER_FILE_PARTIAL}"
+    return f"{constants.USER_DATA_PATH}/{filePrefix}{SERVER_FILE_PARTIAL}"
 
 def insult(file_prefix) -> str:
     try:
         baseInsults = getTextFileContent(BASE_INSULTS_FILE)
         userfile = getUserFileName(file_prefix)
+        print(userfile)
         findOrCreateFile(userfile)
         userInsults = getTextFileContent(userfile)
         insults = baseInsults + userInsults

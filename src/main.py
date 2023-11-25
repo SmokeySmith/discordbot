@@ -1,4 +1,3 @@
-from DiscordEvent import discordBotEvent
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -12,8 +11,4 @@ load_dotenv(dotenv_path=env_path)
 #TODO logging of every recorded error
 if __name__ == "__main__":
     mode = os.environ["DISCORD_MODE"]
-    if mode == "EVENT":
-        discordBotEvent()
-    elif mode == "COMMAND": 
-        discordBotCommands()
-    pass
+    discordBotCommands()

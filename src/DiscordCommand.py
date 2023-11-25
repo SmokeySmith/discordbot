@@ -1,18 +1,11 @@
 import os
-import traceback
 import discord
-from discord.ext.commands import Context
 from discord import option
 from insulter import insult, addInsult
 from diceRoller import interpDice, addMacro
 from bag import addToBag, findInbag, removeFromBag, printBag
 from fileIO import getJSONFileContent, findOrCreateFile
-from PokemonSession import PokemonSession
-import DatabaseInteraction
-from PokemonType import Pokemon
 import constants
-
-SESSION = PokemonSession()
 
 def logCommandInfo(ctx, command) -> None:
     user = ctx.author
@@ -89,7 +82,7 @@ def discordBotCommands():
         result = addMacro(macro_name, dice, filePrefix)
         await ctx.respond(result)
 
-    @bot.slash_command(guild_ids=SERVERS, name="dispardis", description="This is a command currently to insult Pardis created at Mat's request")
+    @bot.slash_command(guild_ids=SERVERS, name="insult", description="Insult someone with your cutting words.")
     async def insultRequest(ctx: discord.ApplicationContext):
         logCommandInfo(ctx, "dispardis")
         result = insult(getServerFilePrefix(ctx))
@@ -146,53 +139,5 @@ def discordBotCommands():
     async def help(ctx):
         logCommandInfo(ctx, "help")
         await ctx.respond("This is a help message that has unhelpfully be filled out with a placeholder")
-
-    @bot.slash_command(guild_ids=SERVERS, name="entertallgrass", description="You enter the tall grass what could happen")
-    async def pokebattleBegin(ctx):
-        try:
-            if not DatabaseInteraction.userExists(ctx.author.id):
-                DatabaseInteraction.addUser(ctx.author.id, ctx.author.name)
-            result = SESSION.startSession()
-            if result is None:
-                poke = SESSION.getPokemon()
-                await ctx.respond(f"A wild f{poke.displayName} has appeared catch them.")
-                await ctx.respond(poke.image)
-            else:
-                await ctx.respond(result)
-        except Exception as e:
-            print(e)
-            traceback.print_tb(e.__traceback__)
-            await ctx.respond("I'm sorry something went wrong.")
             
-    #TODO fix pokemon stuff its fucked
-    @bot.slash_command(guild_ids=SERVERS, name="throwpokeball", description="catch the little blighter")
-    async def catchPokemon(ctx):
-        try:
-            if not DatabaseInteraction.userExists(ctx.author.id):
-                DatabaseInteraction.addUser(ctx.author.id, ctx.author.name)
-            if SESSION.isSessionStarted():
-                res = SESSION.attemptCatch(ctx.author)
-                await ctx.respond(res)
-            else:
-                await ctx.respond("There is not currently a pokemon to catch.")
-        except Exception as e:
-            print(e)
-            traceback.print_tb(e.__traceback__)
-            await ctx.respond("failure")
-
-    @bot.slash_command(guild_ids=SERVERS, name="checkpokedex", description="Check my currently caught pokemon")
-    async def checkpokedex(ctx: Context):
-        try:
-            if not DatabaseInteraction.userExists(ctx.author.id):
-                DatabaseInteraction.addUser(ctx.author.id, ctx.author.name)
-            pokemons: list[Pokemon] = DatabaseInteraction.getUserPokemon(ctx.author.id)
-            result = f"{ctx.author.name} has the following pokemon: "
-            for p in pokemons:
-                result += f"\n\t{p.displayName}"
-            await ctx.respond(result)
-        except Exception as e:
-            print(e)
-            traceback.print_tb(e.__traceback__)
-            await ctx.respond("failure")
-    
     bot.run(os.environ["DISCORD_TOKEN"])

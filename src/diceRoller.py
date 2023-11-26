@@ -40,7 +40,7 @@ def addMacro(macro_name: str, macro_body: str, filePrefix: str) -> str:
         macros = getSavedMacros(filePrefix)
         replaceWithSavedMacros(macro_body, macros, 2)
         
-        fileName = f"{filePrefix}Macros.json"
+        fileName = f"{constants.USER_DATA_PATH}/{filePrefix}Macros.json"
 
         error = findOrCreateFile(fileName)
         if error is not None:
